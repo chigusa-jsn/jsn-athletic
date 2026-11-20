@@ -89,18 +89,6 @@ public class PlatformEntity extends Entity {
         setPos(p.x, p.y, p.z);
     }
 
-    /** 画面でなめらかに動くように、1ティック前の場所を式から入れる */
-    @Override
-    public void setOldPosAndRot() {
-        super.setOldPosAndRot();
-        if (mover() != null) {
-            Vec3 o = posAt(level().getGameTime() - 1);
-            xo = xOld = o.x;
-            yo = yOld = o.y;
-            zo = zOld = o.z;
-        }
-    }
-
     @Override
     public EntityDimensions getDimensions(Pose pose) {
         return EntityDimensions.fixed((float) size(), (float) MoverBlockEntity.THICK);
