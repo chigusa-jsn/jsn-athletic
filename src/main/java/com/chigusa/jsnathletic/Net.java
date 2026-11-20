@@ -43,7 +43,7 @@ public final class Net {
         PayloadRegistrar r = e.registrar("1");
         r.playToServer(Config.TYPE, Config.STREAM_CODEC, (p, c) -> c.enqueueWork(() -> {
             if (!(c.player() instanceof ServerPlayer sp) || !JsnAthletic.canEdit(sp) || sp.blockPosition().distSqr(p.pos()) > 64 * 64) return;
-            if (sp.level().getBlockEntity(p.pos()) instanceof com.chigusa.jsnathletic.mover.Configurable c) c.apply(p.key(), p.value());
+            if (sp.level().getBlockEntity(p.pos()) instanceof com.chigusa.jsnathletic.mover.Configurable cfg) cfg.apply(p.key(), p.value());
         }));
         r.playToServer(Key.TYPE, Key.STREAM_CODEC, (p, c) -> c.enqueueWork(() -> {
             if (c.player() instanceof ServerPlayer sp) {
