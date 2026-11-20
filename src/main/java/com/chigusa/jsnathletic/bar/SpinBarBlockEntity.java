@@ -19,7 +19,7 @@ import java.util.Set;
 import java.util.WeakHashMap;
 
 /** 回るバー：水平に回る棒。当たると はじき飛ばされる */
-public class SpinBarBlockEntity extends BlockEntity {
+public class SpinBarBlockEntity extends BlockEntity implements com.chigusa.jsnathletic.mover.Configurable {
     /** 画面側で、近くのバーを探すための一覧 */
     public static final Set<SpinBarBlockEntity> CLIENT = Collections.newSetFromMap(new WeakHashMap<>());
 
@@ -94,6 +94,7 @@ public class SpinBarBlockEntity extends BlockEntity {
         }
     }
 
+    @Override
     public void apply(String key, double v) {
         long now = level == null ? 0 : level.getGameTime();
         base = angleAt(now);

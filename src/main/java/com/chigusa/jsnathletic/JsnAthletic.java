@@ -81,6 +81,31 @@ public final class JsnAthletic {
     public static final Supplier<BlockEntityType<StartBlockEntity>> START_BE = BLOCK_ENTITIES.register("start_line",
             () -> BlockEntityType.Builder.of(StartBlockEntity::new, START.get()).build(null));
 
+    // ジャンプ台・ベルトコンベア・消えたり出たりする床
+    public static final DeferredBlock<com.chigusa.jsnathletic.gimmick.JumpPadBlock> JUMP_PAD = BLOCKS.register("jump_pad",
+            () -> new com.chigusa.jsnathletic.gimmick.JumpPadBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_ORANGE).strength(1.5F).sound(SoundType.SLIME_BLOCK)));
+    public static final DeferredBlock<com.chigusa.jsnathletic.gimmick.ConveyorBlock> CONVEYOR = BLOCKS.register("conveyor",
+            () -> new com.chigusa.jsnathletic.gimmick.ConveyorBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(2F).sound(SoundType.METAL)));
+    public static final DeferredBlock<com.chigusa.jsnathletic.gimmick.BlinkBlock> BLINK = BLOCKS.register("blink_block",
+            () -> new com.chigusa.jsnathletic.gimmick.BlinkBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_RED).strength(1F).sound(SoundType.AMETHYST).noOcclusion()));
+    public static final DeferredItem<BlockItem> JUMP_PAD_ITEM = ITEMS.registerSimpleBlockItem(JUMP_PAD);
+    public static final DeferredItem<BlockItem> CONVEYOR_ITEM = ITEMS.registerSimpleBlockItem(CONVEYOR);
+    public static final DeferredItem<BlockItem> BLINK_ITEM = ITEMS.registerSimpleBlockItem(BLINK);
+
+    // ふりこの鉄球・回転する角材
+    public static final DeferredBlock<com.chigusa.jsnathletic.gimmick.GimmickBlock> PENDULUM = BLOCKS.register("pendulum",
+            () -> new com.chigusa.jsnathletic.gimmick.GimmickBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3F).sound(SoundType.METAL),
+                    com.chigusa.jsnathletic.gimmick.PendulumBlockEntity::new, JsnAthletic.PENDULUM_BE));
+    public static final DeferredItem<BlockItem> PENDULUM_ITEM = ITEMS.registerSimpleBlockItem(PENDULUM);
+    public static final Supplier<BlockEntityType<com.chigusa.jsnathletic.gimmick.PendulumBlockEntity>> PENDULUM_BE = BLOCK_ENTITIES.register("pendulum",
+            () -> BlockEntityType.Builder.of(com.chigusa.jsnathletic.gimmick.PendulumBlockEntity::new, PENDULUM.get()).build(null));
+    public static final DeferredBlock<com.chigusa.jsnathletic.gimmick.GimmickBlock> ROLLING_BEAM = BLOCKS.register("rolling_beam",
+            () -> new com.chigusa.jsnathletic.gimmick.GimmickBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).strength(3F).sound(SoundType.WOOD),
+                    com.chigusa.jsnathletic.gimmick.RollingBeamBlockEntity::new, JsnAthletic.ROLLING_BEAM_BE));
+    public static final DeferredItem<BlockItem> ROLLING_BEAM_ITEM = ITEMS.registerSimpleBlockItem(ROLLING_BEAM);
+    public static final Supplier<BlockEntityType<com.chigusa.jsnathletic.gimmick.RollingBeamBlockEntity>> ROLLING_BEAM_BE = BLOCK_ENTITIES.register("rolling_beam",
+            () -> BlockEntityType.Builder.of(com.chigusa.jsnathletic.gimmick.RollingBeamBlockEntity::new, ROLLING_BEAM.get()).build(null));
+
     public static final Supplier<CreativeModeTab> TAB = TABS.register("main", () -> CreativeModeTab.builder()
             .title(Component.literal("jsn-Athletic")).icon(() -> new ItemStack(MOVER_ITEM.get()))
             .displayItems((p, out) -> {
@@ -90,6 +115,11 @@ public final class JsnAthletic {
                 out.accept(START_ITEM.get());
                 out.accept(CHECKPOINT_ITEM.get());
                 out.accept(GOAL_ITEM.get());
+                out.accept(JUMP_PAD_ITEM.get());
+                out.accept(CONVEYOR_ITEM.get());
+                out.accept(BLINK_ITEM.get());
+                out.accept(PENDULUM_ITEM.get());
+                out.accept(ROLLING_BEAM_ITEM.get());
             }).build());
 
     public JsnAthletic(IEventBus bus) {

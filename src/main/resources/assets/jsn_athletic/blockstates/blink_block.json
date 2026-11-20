@@ -1,0 +1,40 @@
+{
+  "variants": {
+    "group=0,state=0": {
+      "model": "jsn_athletic:block/blink_0"
+    },
+    "group=0,state=1": {
+      "model": "jsn_athletic:block/blink_0_warn"
+    },
+    "group=0,state=2": {
+      "model": "jsn_athletic:block/blink_0_ghost"
+    },
+    "group=1,state=0": {
+      "model": "jsn_athletic:block/blink_1"
+    },
+    "group=1,state=1": {
+      "model": "jsn_athletic:block/blink_1_warn"
+    },
+    "group=1,state=2": {
+      "model": "jsn_athletic:block/blink_1_ghost"
+    },
+    "group=2,state=0": {
+      "model": "jsn_athletic:block/blink_2"
+    },
+    "group=2,state=1": {
+      "model": "jsn_athletic:block/blink_2_warn"
+    },
+    "group=2,state=2": {
+      "model": "jsn_athletic:block/blink_2_ghost"
+    },
+    "group=3,state=0": {
+      "model": "jsn_athletic:block/blink_3"
+    },
+    "group=3,state=1": {
+      "model": "jsn_athletic:block/blink_3_warn"
+    },
+    "group=3,state=2": {
+      "model": "jsn_athletic:block/blink_3_ghost"
+    }
+  }
+}

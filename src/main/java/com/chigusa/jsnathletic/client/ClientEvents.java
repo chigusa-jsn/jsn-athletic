@@ -35,6 +35,7 @@ public final class ClientEvents {
         long t = mc.level.getGameTime();   // このあと1つ進んで t+1 になる
         carry(mc, p, t);
         bars(p, t + 1);
+        pendulums(p, t + 1);
         keys(mc);
     }
 
@@ -42,15 +43,15 @@ public final class ClientEvents {
         if (p.isPassenger() || p.getAbilities().flying) return;
         AABB pb = p.getBoundingBox();
         for (PlatformEntity e : mc.level.getEntitiesOfClass(PlatformEntity.class, pb.inflate(8))) {
-            MoverBlockEntity m = e.mover();
+            var m = e.host();
             if (m == null) continue;
             AABB now = e.boxAt(t);
             // 足場の上に立っている？（足の高さが足場の上の面のすぐ近く）
             boolean onTop = pb.minY >= now.maxY - 0.15 && pb.minY <= now.maxY + 0.2
                     && pb.maxX > now.minX + 0.02 && pb.minX < now.maxX - 0.02 && pb.maxZ > now.minZ + 0.02 && pb.minZ < now.maxZ - 0.02;
-            Vec3 d = e.posAt(t + 1).subtract(e.posAt(t));
+            Vec3 d = e.posAt(t + 1).subtract(e.posAt(t)).add(m.surfaceMotion(e.index(), t));
             if (onTop && d.lengthSqr() > 0) {
-                p.setPos(p.getX() + d.x, Math.max(p.getY() + d.y, e.posAt(t + 1).y + MoverBlockEntity.THICK), p.getZ() + d.z);
+                p.setPos(p.getX() + d.x, Math.max(p.getY() + d.y, e.posAt(t + 1).y + e.thick()), p.getZ() + d.z);
                 break;
             }
         }
@@ -90,6 +91,31 @@ public final class ClientEvents {
                 p.playSound(SoundEvents.SLIME_BLOCK_HIT, 1F, 0.8F);
                 return;
             }
+        }
+    }
+
+    /** ふりこの鉄球に当たったら、ゆれている向きへ はじく */
+    private static void pendulums(LocalPlayer p, long t) {
+        if (hitCooldown > 0 || p.isSpectator() || p.getAbilities().flying) return;
+        Vec3 mid = p.position().add(0, p.getBbHeight() / 2, 0);
+        for (com.chigusa.jsnathletic.gimmick.PendulumBlockEntity b : com.chigusa.jsnathletic.gimmick.PendulumBlockEntity.CLIENT) {
+            if (b.isRemoved() || b.getLevel() != p.level()) continue;
+            Vec3 c = b.ballPos(t);
+            double r = b.ball / 2;
+            // 体（たての棒）と球の近さ
+            double dy = Math.max(0, Math.max(p.getY() - c.y, c.y - (p.getY() + p.getBbHeight())));
+            double dx = c.x - p.getX(), dz = c.z - p.getZ();
+            double horiz = Math.sqrt(dx * dx + dz * dz);
+            if (horiz > r + p.getBbWidth() / 2 + 0.05 || dy > r) continue;
+            double vel = b.angle(t + 1) - b.angle(t);
+            Vec3 dir = b.swingDir().scale(Math.signum(vel == 0 ? 1 : vel));
+            Vec3 away = new Vec3(-dx, 0, -dz).normalize();
+            Vec3 push = dir.scale(1.0 + Math.min(1.0, Math.abs(vel) / 3)).add(away.scale(0.3)).add(0, 0.5, 0);
+            p.setDeltaMovement(push);
+            p.hurtMarked = true;
+            hitCooldown = 12;
+            p.playSound(net.minecraft.sounds.SoundEvents.ANVIL_LAND, 0.5F, 1.4F);
+            return;
         }
     }
 

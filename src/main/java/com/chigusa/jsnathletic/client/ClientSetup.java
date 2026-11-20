@@ -23,6 +23,7 @@ public final class ClientSetup {
     public static void setup(FMLClientSetupEvent e) {
         MoverBlock.openScreen = pos -> Minecraft.getInstance().setScreen(new ConfigScreen(pos));
         SpinBarBlock.openScreen = pos -> Minecraft.getInstance().setScreen(new ConfigScreen(pos));
+        com.chigusa.jsnathletic.gimmick.GimmickBlock.openScreen = pos -> Minecraft.getInstance().setScreen(new ConfigScreen(pos));
         Net.onHud = RunHud::onHud;
     }
 
@@ -31,6 +32,8 @@ public final class ClientSetup {
         e.registerEntityRenderer(JsnAthletic.PLATFORM.get(), PlatformRenderer::new);
         e.registerBlockEntityRenderer(JsnAthletic.MOVER_BE.get(), MoverRenderer::new);
         e.registerBlockEntityRenderer(JsnAthletic.SPIN_BAR_BE.get(), SpinBarRenderer::new);
+        e.registerBlockEntityRenderer(JsnAthletic.PENDULUM_BE.get(), PendulumRenderer::new);
+        e.registerBlockEntityRenderer(JsnAthletic.ROLLING_BEAM_BE.get(), RollingBeamRenderer::new);
     }
 
     @SubscribeEvent

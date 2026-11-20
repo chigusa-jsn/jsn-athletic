@@ -97,3 +97,97 @@ en = {"block.jsn_athletic.mover": "Mover Base", "block.jsn_athletic.spin_bar": "
       "entity.jsn_athletic.platform": "Platform", "key.categories.jsn_athletic": "jsn-Athletic", "key.jsn_athletic.retry": "Back to checkpoint (hold to quit)"}
 wj(f"{A}/lang/ja_jp.json", ja); wj(f"{A}/lang/en_us.json", en)
 print("ok")
+
+# ================= ジャンプ台・ベルトコンベア・消えたり出たりする床・ふりこ・角材 =================
+def jump_top(d):
+    d.rectangle([0, 0, 15, 15], fill=hx("#f08020")); d.rectangle([0, 0, 15, 15], outline=hx("#a04010"))
+    d.polygon([(7, 2), (12, 8), (9, 8), (9, 13), (6, 13), (6, 8), (3, 8)], fill=hx("#fff0a0"))
+def jump_side(d):
+    d.rectangle([0, 0, 15, 15], fill=hx("#606870"))
+    for y in (2, 6, 10): d.line([1, y, 14, y + 2], fill=hx("#c0c8d0"))
+tex("jump_top", jump_top); tex("jump_side", jump_side)
+wj(f"{A}/models/block/jump_pad.json", {"parent": "minecraft:block/block", "textures": {"top": "jsn_athletic:block/jump_top", "side": "jsn_athletic:block/jump_side",
+    "particle": "jsn_athletic:block/jump_top"}, "elements": [{"from": [0, 0, 0], "to": [16, 6, 16], "faces": {
+    "up": {"texture": "#top"}, "down": {"texture": "#side"}, **{f: {"texture": "#side", "uv": [0, 10, 16, 16]} for f in ("north", "south", "east", "west")}}}]})
+wj(f"{A}/blockstates/jump_pad.json", {"variants": {f"power={p}": {"model": "jsn_athletic:block/jump_pad"} for p in range(1, 6)}})
+wj(f"{A}/models/item/jump_pad.json", {"parent": "jsn_athletic:block/jump_pad"})
+
+# コンベア（上の面は矢印が流れる動く絵）
+frames = 8
+im = Image.new("RGBA", (16, 16 * frames), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
+for f in range(frames):
+    oy = f * 16
+    d.rectangle([0, oy, 15, oy + 15], fill=hx("#303438"))
+    d.rectangle([0, oy, 1, oy + 15], fill=hx("#f0c030")); d.rectangle([14, oy, 15, oy + 15], fill=hx("#f0c030"))
+    for k in range(-1, 3):
+        y = (k * 8 - f * 1) % 16
+        pts = [(4, y + 4), (8, y), (12, y + 4), (10, y + 4), (8, y + 2), (6, y + 4)]
+        d.polygon([(x, oy + max(0, min(15, yy))) for x, yy in pts], fill=hx("#d0d4d8"))
+save(im, f"{A}/textures/block/conveyor_top.png")
+with open(f"{A}/textures/block/conveyor_top.png.mcmeta", "w") as fh: json.dump({"animation": {"frametime": 2}}, fh)
+tex("conveyor_side", lambda d: (d.rectangle([0, 0, 15, 15], fill=hx("#505860")), d.rectangle([0, 4, 15, 5], fill=hx("#f0c030")),
+                                [d.ellipse([x, 7, x + 3, 10], fill=hx("#202428")) for x in (1, 6, 11)]))
+wj(f"{A}/models/block/conveyor.json", {"parent": "minecraft:block/block", "textures": {"top": "jsn_athletic:block/conveyor_top", "side": "jsn_athletic:block/conveyor_side",
+    "particle": "jsn_athletic:block/conveyor_side"}, "elements": [{"from": [0, 0, 0], "to": [16, 12, 16], "faces": {
+    "up": {"texture": "#top"}, "down": {"texture": "#side"}, **{f: {"texture": "#side", "uv": [0, 4, 16, 16]} for f in ("north", "south", "east", "west")}}}]})
+wj(f"{A}/blockstates/conveyor.json", {"variants": {f"facing={f},speed={s}": ({"model": "jsn_athletic:block/conveyor"} | ({"y": y} if y else {}))
+                                                  for f, y in (("north", 0), ("east", 90), ("south", 180), ("west", 270)) for s in (1, 2, 3)}})
+wj(f"{A}/models/item/conveyor.json", {"parent": "jsn_athletic:block/conveyor"})
+
+# 消えたり出たりする床（4色）
+BLINK = ["#e04040", "#f0d030", "#40c060", "#4080f0"]
+for g, c in enumerate(BLINK):
+    def on(d, c=c):
+        d.rectangle([0, 0, 15, 15], fill=hx(c)); d.rectangle([0, 0, 15, 15], outline=(255, 255, 255, 255)); d.rectangle([3, 3, 12, 12], outline=(255, 255, 255, 140))
+    def warn(d, c=c):
+        d.rectangle([0, 0, 15, 15], fill=hx(c)[:3] + (150,))
+        for x in range(-16, 16, 4): d.line([x, 15, x + 15, 0], fill=(255, 255, 255, 220), width=1)
+        d.rectangle([0, 0, 15, 15], outline=(255, 255, 255, 255))
+    def ghost(d, c=c):
+        d.rectangle([0, 0, 15, 15], outline=hx(c)[:3] + (120,)); d.rectangle([1, 1, 14, 14], fill=hx(c)[:3] + (28,))
+    tex(f"blink_{g}", on); tex(f"blink_{g}_warn", warn); tex(f"blink_{g}_ghost", ghost)
+    wj(f"{A}/models/block/blink_{g}.json", {"parent": "minecraft:block/cube_all", "textures": {"all": f"jsn_athletic:block/blink_{g}"}})
+    wj(f"{A}/models/block/blink_{g}_warn.json", {"parent": "minecraft:block/cube_all", "render_type": "minecraft:translucent", "textures": {"all": f"jsn_athletic:block/blink_{g}_warn"}})
+    wj(f"{A}/models/block/blink_{g}_ghost.json", {"parent": "minecraft:block/cube_all", "render_type": "minecraft:translucent", "textures": {"all": f"jsn_athletic:block/blink_{g}_ghost"}})
+wj(f"{A}/blockstates/blink_block.json", {"variants": {f"group={g},state={s}": {"model": f"jsn_athletic:block/blink_{g}" + ["", "_warn", "_ghost"][s]}
+                                                      for g in range(4) for s in range(3)}})
+wj(f"{A}/models/item/blink_block.json", {"parent": "jsn_athletic:block/blink_0"})
+
+# ふりこ・角材の台
+def pend_side(d):
+    d.rectangle([0, 0, 15, 15], fill=hx("#4a4e56")); d.rectangle([0, 0, 15, 15], outline=hx("#2a2c30"))
+    d.line([7, 3, 7, 10], fill=hx("#c0c4c8")); d.ellipse([5, 9, 10, 14], fill=hx("#202224"))
+def pend_bottom(d):
+    d.rectangle([0, 0, 15, 15], fill=hx("#4a4e56")); d.ellipse([5, 5, 10, 10], fill=hx("#c0c4c8"))
+tex("pendulum_side", pend_side); tex("pendulum_bottom", pend_bottom)
+cube("pendulum", "pendulum_side", "pendulum_bottom", "pendulum_bottom")
+def beam_side(d):
+    d.rectangle([0, 0, 15, 15], fill=hx("#8a5a2a")); d.rectangle([2, 6, 13, 9], fill=hx("#f0c030"))
+    d.polygon([(9, 4), (13, 7), (9, 11)], fill=hx("#f0c030"))
+def beam_top(d):
+    d.rectangle([0, 0, 15, 15], fill=hx("#6a4018")); d.ellipse([3, 3, 12, 12], outline=hx("#f0c030")); d.point((7, 7), fill=hx("#f0c030"))
+tex("rolling_beam_side", beam_side); tex("rolling_beam_top", beam_top)
+cube("rolling_beam", "rolling_beam_side", "rolling_beam_top")
+for b in ("pendulum", "rolling_beam"):
+    wj(f"{A}/blockstates/{b}.json", {"variants": {"": {"model": f"jsn_athletic:block/{b}"}}})
+    wj(f"{A}/models/item/{b}.json", {"parent": f"jsn_athletic:block/{b}"})
+
+NEW = ["jump_pad", "conveyor", "blink_block", "pendulum", "rolling_beam"]
+for b in NEW:
+    wj(f"{D}/loot_table/blocks/{b}.json", {"type": "minecraft:block", "pools": [{"rolls": 1, "entries": [{"type": "minecraft:item", "name": f"jsn_athletic:{b}"}],
+                                                                              "conditions": [{"condition": "minecraft:survives_explosion"}]}]})
+pk = f"{R}/data/minecraft/tags/block/mineable/pickaxe.json"; dd = json.load(open(pk))
+for b in ("jump_pad", "conveyor", "blink_block", "pendulum"): dd["values"].append(f"jsn_athletic:{b}")
+wj(pk, dd)
+wj(f"{R}/data/minecraft/tags/block/mineable/axe.json", {"replace": False, "values": ["jsn_athletic:rolling_beam"]})
+shaped("jump_pad", ["SSS", "IPI"], {"S": "minecraft:slime_ball", "I": "minecraft:iron_ingot", "P": "minecraft:piston"}, 2)
+shaped("conveyor", ["LLL", "IRI"], {"L": "minecraft:leather", "I": "minecraft:iron_ingot", "R": "minecraft:redstone"}, 4)
+shaped("blink_block", ["GAG", "ARA", "GAG"], {"G": "minecraft:glass", "A": "minecraft:amethyst_shard", "R": "minecraft:redstone"}, 4)
+shaped("pendulum", ["III", " C ", " B "], {"I": "minecraft:iron_ingot", "C": "minecraft:chain", "B": "minecraft:iron_block"})
+shaped("rolling_beam", ["LLL", "RPR", "LLL"], {"L": "#minecraft:logs", "R": "minecraft:redstone", "P": "minecraft:piston"})
+ja.update({"block.jsn_athletic.jump_pad": "ジャンプ台", "block.jsn_athletic.conveyor": "ベルトコンベア", "block.jsn_athletic.blink_block": "消えたり出たりする床",
+           "block.jsn_athletic.pendulum": "ふりこの鉄球", "block.jsn_athletic.rolling_beam": "回転する角材"})
+en.update({"block.jsn_athletic.jump_pad": "Jump Pad", "block.jsn_athletic.conveyor": "Conveyor Belt", "block.jsn_athletic.blink_block": "Blinking Floor",
+           "block.jsn_athletic.pendulum": "Pendulum Ball", "block.jsn_athletic.rolling_beam": "Rolling Beam"})
+wj(f"{A}/lang/ja_jp.json", ja); wj(f"{A}/lang/en_us.json", en)
+print("ok2")

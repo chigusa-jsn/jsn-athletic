@@ -70,6 +70,27 @@ public class ConfigScreen extends Screen {
             rows.add(new Row("動かし方", () -> Params.TRIGGERS[b.trigger], "trigger", () -> (double) (b.trigger + 1), 0, true));
             if (b.trigger == MoverBlockEntity.TIMED) rows.add(new Row("動く時間", () -> b.seconds + "秒", "seconds", () -> (double) b.seconds, 1, false));
         }
+        if (o instanceof com.chigusa.jsnathletic.gimmick.PendulumBlockEntity b) {
+            rows.add(new Row("くさりの長さ", () -> fmt(b.length) + "マス", "radius", () -> b.length, 0.5, false));
+            rows.add(new Row("ゆれの大きさ", () -> fmt(b.amplitude) + "度", "amplitude", () -> b.amplitude, 5, false));
+            rows.add(new Row("速さ", () -> fmt(b.speed), "speed", () -> b.speed, 10, false));
+            rows.add(new Row("鉄球の大きさ", () -> fmt(b.ball) + "マス", "size", () -> b.ball, 0.5, false));
+            rows.add(new Row("ゆれる向き", () -> b.axis == 0 ? "東西（X）" : "南北（Z）", "axis", () -> (double) (b.axis + 1), 0, true));
+            rows.add(new Row("タイミングずらし", () -> b.offset + "度", "offset", () -> (double) b.offset, 45, false));
+            rows.add(new Row("鉄球の色", () -> new String[]{"黒", "銀", "金"}[Math.floorMod(b.style, 3)], "style", () -> (double) (b.style + 1), 0, true));
+            rows.add(new Row("動かし方", () -> Params.TRIGGERS[b.trigger], "trigger", () -> (double) (b.trigger + 1), 0, true));
+            if (b.trigger == MoverBlockEntity.TIMED) rows.add(new Row("動く時間", () -> b.seconds + "秒", "seconds", () -> (double) b.seconds, 1, false));
+        } else if (o instanceof com.chigusa.jsnathletic.gimmick.RollingBeamBlockEntity b) {
+            rows.add(new Row("角材の長さ", () -> fmt(b.length) + "マス", "radius", () -> b.length, 1, false));
+            rows.add(new Row("角材の太さ", () -> fmt(b.width) + "マス", "size", () -> b.width, 0.5, false));
+            rows.add(new Row("回る速さ", () -> fmt(b.speed) + "度/秒", "speed", () -> b.speed, 5, false));
+            rows.add(new Row("高さ", () -> fmt(b.height) + "マス上", "height", () -> b.height, 0.5, false));
+            rows.add(new Row("のびる向き", () -> b.axis == 0 ? "東（X）" : "南（Z）", "axis", () -> (double) (b.axis + 1), 0, true));
+            rows.add(new Row("見た目", () -> Params.STYLE_NAMES[Math.floorMod(b.style, Params.STYLES.length)], "style", () -> (double) (b.style + 1), 0, true));
+            rows.add(new Row("向き", () -> b.reverse ? "逆まわり" : "ふつう", "reverse", () -> b.reverse ? 0.0 : 1.0, 0, true));
+            rows.add(new Row("動かし方", () -> Params.TRIGGERS[b.trigger], "trigger", () -> (double) (b.trigger + 1), 0, true));
+            if (b.trigger == MoverBlockEntity.TIMED) rows.add(new Row("動く時間", () -> b.seconds + "秒", "seconds", () -> (double) b.seconds, 1, false));
+        }
         int w = 260, h = 30 + rows.size() * 22 + 30;
         left = (width - w) / 2;
         top = (height - h) / 2;
@@ -120,7 +141,10 @@ public class ConfigScreen extends Screen {
         g.fill(left, top, left + w, top + h, 0xE0101820);
         g.renderOutline(left, top, w, h, 0xFF60A0F0);
         super.render(g, mx, my, pt);
-        g.drawString(font, "§l" + (be() instanceof SpinBarBlockEntity ? "回るバーの設定" : "仕掛けの台の設定"), left + 10, top + 8, 0xFFFFFF);
+        Object o = be();
+        String title = o instanceof SpinBarBlockEntity ? "回るバーの設定" : o instanceof com.chigusa.jsnathletic.gimmick.PendulumBlockEntity ? "ふりこの鉄球の設定"
+                : o instanceof com.chigusa.jsnathletic.gimmick.RollingBeamBlockEntity ? "回転する角材の設定" : "仕掛けの台の設定";
+        g.drawString(font, "§l" + title, left + 10, top + 8, 0xFFFFFF);
         g.drawString(font, "§8Shift＋クリックで5つずつ", left + w - 10 - font.width("Shift＋クリックで5つずつ"), top + 8, 0xFFFFFF);
         for (int i = 0; i < rows.size(); i++) {
             Row r = rows.get(i);

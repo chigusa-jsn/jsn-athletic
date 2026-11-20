@@ -21,7 +21,7 @@ import net.minecraft.world.phys.Vec3;
 public class PlatformEntity extends Entity {
     private static final EntityDataAccessor<BlockPos> CONTROLLER = SynchedEntityData.defineId(PlatformEntity.class, EntityDataSerializers.BLOCK_POS);
     private static final EntityDataAccessor<Integer> INDEX = SynchedEntityData.defineId(PlatformEntity.class, EntityDataSerializers.INT);
-    private float lastSize = -1;
+    private float lastSize = -1, lastThick = -1;
 
     public PlatformEntity(EntityType<? extends PlatformEntity> type, Level level) {
         super(type, level);
@@ -48,41 +48,52 @@ public class PlatformEntity extends Entity {
         b.define(INDEX, 0);
     }
 
+    public PartHost host() {
+        return level().getBlockEntity(controller()) instanceof PartHost m ? m : null;
+    }
+
+    /** 回る足場・動く床なら、その台 */
     public MoverBlockEntity mover() {
-        return level().getBlockEntity(controller()) instanceof MoverBlockEntity m ? m : null;
+        return host() instanceof MoverBlockEntity m ? m : null;
     }
 
     /** 時刻 t のときの場所 */
     public Vec3 posAt(double t) {
-        MoverBlockEntity m = mover();
-        return m == null ? position() : m.partPos(index(), m.phaseAt(t));
+        PartHost m = host();
+        return m == null ? position() : m.partPos(index(), t);
     }
 
     public double size() {
-        MoverBlockEntity m = mover();
-        return m == null ? 1 : m.size;
+        PartHost m = host();
+        return m == null ? 1 : m.partWidth();
+    }
+
+    public double thick() {
+        PartHost m = host();
+        return m == null ? 0.5 : m.partHeight();
     }
 
     /** 時刻 t のときの当たり判定の箱 */
     public AABB boxAt(double t) {
         Vec3 p = posAt(t);
         double h = size() / 2;
-        return new AABB(p.x - h, p.y, p.z - h, p.x + h, p.y + MoverBlockEntity.THICK, p.z + h);
+        return new AABB(p.x - h, p.y, p.z - h, p.x + h, p.y + thick(), p.z + h);
     }
 
     @Override
     public void tick() {
-        MoverBlockEntity m = mover();
+        PartHost m = host();
         if (m == null) {
             if (!level().isClientSide && level().isLoaded(controller())) discard();
             return;
         }
-        if (!level().isClientSide && index() >= m.count) {
+        if (!level().isClientSide && index() >= m.partCount()) {
             discard();
             return;
         }
-        if (lastSize != (float) m.size) {
-            lastSize = (float) m.size;
+        if (lastSize != (float) m.partWidth() || lastThick != (float) m.partHeight()) {
+            lastSize = (float) m.partWidth();
+            lastThick = (float) m.partHeight();
             refreshDimensions();
         }
         Vec3 p = posAt(level().getGameTime());
@@ -91,7 +102,7 @@ public class PlatformEntity extends Entity {
 
     @Override
     public EntityDimensions getDimensions(Pose pose) {
-        return EntityDimensions.fixed((float) size(), (float) MoverBlockEntity.THICK);
+        return EntityDimensions.fixed((float) size(), (float) thick());
     }
 
     // サーバーからの場所の知らせは使わない（自分で式から計算する）

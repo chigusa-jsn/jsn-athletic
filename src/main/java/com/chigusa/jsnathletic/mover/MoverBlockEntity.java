@@ -20,7 +20,7 @@ import java.util.List;
  * 仕掛けの台：上に足場（PlatformEntity）を出して、回したり往復させたりする。
  * 足場の位置は「時刻の式」で決まるので、サーバーでも画面でも同じ場所になる。
  */
-public class MoverBlockEntity extends BlockEntity {
+public class MoverBlockEntity extends BlockEntity implements PartHost, Configurable {
     public static final int ROTATE = 0, SLIDE = 1;
     public static final int ALWAYS = 0, HOLD = 1, TIMED = 2;
 
@@ -62,12 +62,38 @@ public class MoverBlockEntity extends BlockEntity {
         startTick = now;
     }
 
+    @Override
+    public BlockPos hostPos() {
+        return worldPosition;
+    }
+
+    @Override
+    public int partCount() {
+        return count;
+    }
+
+    @Override
+    public Vec3 partPos(int i, double t) {
+        return partPosPhase(i, phaseAt(t));
+    }
+
+    @Override
+    public double partWidth() {
+        return size;
+    }
+
+    @Override
+    public double partHeight() {
+        return THICK;
+    }
+
+    @Override
     public double reach() {
         return mode == ROTATE ? radius + size : distance + count * (size + 1) + size;
     }
 
-    /** i 番目の足場の、下の面のまんなか */
-    public Vec3 partPos(int i, double phase) {
+    /** i 番目の足場の、下の面のまんなか（phase の位置で） */
+    public Vec3 partPosPhase(int i, double phase) {
         double cx = worldPosition.getX() + 0.5, cy = worldPosition.getY() + 1 + height - THICK, cz = worldPosition.getZ() + 0.5;
         if (mode == ROTATE) {
             double a = Math.toRadians(phase + i * 360.0 / Math.max(1, count));
@@ -92,23 +118,8 @@ public class MoverBlockEntity extends BlockEntity {
         if (now % 20 == 0) be.ensureParts((ServerLevel) level);
     }
 
-    /** 足場の数をそろえる（足りなければ出す、多ければ消す） */
     void ensureParts(ServerLevel level) {
-        AABB box = new AABB(worldPosition).inflate(reach() + 3, Math.max(4, height + distance + 4), reach() + 3);
-        List<PlatformEntity> list = level.getEntitiesOfClass(PlatformEntity.class, box, e -> worldPosition.equals(e.controller()));
-        boolean[] have = new boolean[count];
-        for (PlatformEntity e : list) {
-            int i = e.index();
-            if (i >= count || have[i]) e.discard();
-            else have[i] = true;
-        }
-        for (int i = 0; i < count; i++) if (!have[i]) {
-            PlatformEntity e = new PlatformEntity(JsnAthletic.PLATFORM.get(), level);
-            e.setup(worldPosition, i);
-            Vec3 p = partPos(i, phaseAt(level.getGameTime()));
-            e.setPos(p.x, p.y, p.z);
-            level.addFreshEntity(e);
-        }
+        PartHost.ensure(level, this);
     }
 
     public void onPowered(boolean on) {
@@ -124,10 +135,7 @@ public class MoverBlockEntity extends BlockEntity {
     }
 
     public void removeParts() {
-        if (level instanceof ServerLevel sl) {
-            AABB box = new AABB(worldPosition).inflate(reach() + 4, Math.max(4, height + distance + 4), reach() + 4);
-            for (PlatformEntity e : sl.getEntitiesOfClass(PlatformEntity.class, box, e -> worldPosition.equals(e.controller()))) e.discard();
-        }
+        if (level instanceof ServerLevel sl) PartHost.removeAll(sl, this);
     }
 
     public void sync() {
@@ -193,6 +201,7 @@ public class MoverBlockEntity extends BlockEntity {
     }
 
     /** 設定の変更（画面から） */
+    @Override
     public void apply(String key, double v) {
         long now = level == null ? 0 : level.getGameTime();
         rebase(now);

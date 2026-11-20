@@ -1,0 +1,49 @@
+{
+  "variants": {
+    "facing=north,speed=1": {
+      "model": "jsn_athletic:block/conveyor"
+    },
+    "facing=north,speed=2": {
+      "model": "jsn_athletic:block/conveyor"
+    },
+    "facing=north,speed=3": {
+      "model": "jsn_athletic:block/conveyor"
+    },
+    "facing=east,speed=1": {
+      "model": "jsn_athletic:block/conveyor",
+      "y": 90
+    },
+    "facing=east,speed=2": {
+      "model": "jsn_athletic:block/conveyor",
+      "y": 90
+    },
+    "facing=east,speed=3": {
+      "model": "jsn_athletic:block/conveyor",
+      "y": 90
+    },
+    "facing=south,speed=1": {
+      "model": "jsn_athletic:block/conveyor",
+      "y": 180
+    },
+    "facing=south,speed=2": {
+      "model": "jsn_athletic:block/conveyor",
+      "y": 180
+    },
+    "facing=south,speed=3": {
+      "model": "jsn_athletic:block/conveyor",
+      "y": 180
+    },
+    "facing=west,speed=1": {
+      "model": "jsn_athletic:block/conveyor",
+      "y": 270
+    },
+    "facing=west,speed=2": {
+      "model": "jsn_athletic:block/conveyor",
+      "y": 270
+    },
+    "facing=west,speed=3": {
+      "model": "jsn_athletic:block/conveyor",
+      "y": 270
+    }
+  }
+}

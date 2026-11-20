@@ -7,5 +7,10 @@
   "block.jsn_athletic.goal_line": "Goal Line",
   "entity.jsn_athletic.platform": "Platform",
   "key.categories.jsn_athletic": "jsn-Athletic",
-  "key.jsn_athletic.retry": "Back to checkpoint (hold to quit)"
+  "key.jsn_athletic.retry": "Back to checkpoint (hold to quit)",
+  "block.jsn_athletic.jump_pad": "Jump Pad",
+  "block.jsn_athletic.conveyor": "Conveyor Belt",
+  "block.jsn_athletic.blink_block": "Blinking Floor",
+  "block.jsn_athletic.pendulum": "Pendulum Ball",
+  "block.jsn_athletic.rolling_beam": "Rolling Beam"
 }

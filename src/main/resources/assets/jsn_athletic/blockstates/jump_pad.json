@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "power=1": {
+      "model": "jsn_athletic:block/jump_pad"
+    },
+    "power=2": {
+      "model": "jsn_athletic:block/jump_pad"
+    },
+    "power=3": {
+      "model": "jsn_athletic:block/jump_pad"
+    },
+    "power=4": {
+      "model": "jsn_athletic:block/jump_pad"
+    },
+    "power=5": {
+      "model": "jsn_athletic:block/jump_pad"
+    }
+  }
+}

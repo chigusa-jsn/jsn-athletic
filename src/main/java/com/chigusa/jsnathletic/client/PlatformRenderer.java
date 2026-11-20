@@ -20,7 +20,7 @@ public class PlatformRenderer extends EntityRenderer<PlatformEntity> {
     @Override
     public void render(PlatformEntity e, float yaw, float partial, PoseStack ps, MultiBufferSource buf, int light) {
         MoverBlockEntity m = e.mover();
-        if (m == null) return;
+        if (m == null) return;   // 角材などは、ブロックのほうで描く
         double h = m.size / 2;
         Draw.box(ps, buf, Params.style(m.style), -h, 0, -h, h, MoverBlockEntity.THICK, h, light);
     }

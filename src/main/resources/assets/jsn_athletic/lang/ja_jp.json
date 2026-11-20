@@ -7,5 +7,10 @@
   "block.jsn_athletic.goal_line": "ゴール",
   "entity.jsn_athletic.platform": "足場",
   "key.categories.jsn_athletic": "jsn-Athletic",
-  "key.jsn_athletic.retry": "チェックポイントにもどる（長押しでやめる）"
+  "key.jsn_athletic.retry": "チェックポイントにもどる（長押しでやめる）",
+  "block.jsn_athletic.jump_pad": "ジャンプ台",
+  "block.jsn_athletic.conveyor": "ベルトコンベア",
+  "block.jsn_athletic.blink_block": "消えたり出たりする床",
+  "block.jsn_athletic.pendulum": "ふりこの鉄球",
+  "block.jsn_athletic.rolling_beam": "回転する角材"
 }

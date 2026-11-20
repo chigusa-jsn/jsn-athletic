@@ -5,6 +5,10 @@
     "jsn_athletic:spin_bar",
     "jsn_athletic:start_line",
     "jsn_athletic:checkpoint",
-    "jsn_athletic:goal_line"
+    "jsn_athletic:goal_line",
+    "jsn_athletic:jump_pad",
+    "jsn_athletic:conveyor",
+    "jsn_athletic:blink_block",
+    "jsn_athletic:pendulum"
   ]
 }

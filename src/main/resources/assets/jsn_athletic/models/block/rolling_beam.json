@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "side": "jsn_athletic:block/rolling_beam_side",
+    "top": "jsn_athletic:block/rolling_beam_top",
+    "bottom": "jsn_athletic:block/rolling_beam_top"
+  }
+}
