@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "stage=0": {
+      "model": "jsn_athletic:block/crumble_block_0"
+    },
+    "stage=1": {
+      "model": "jsn_athletic:block/crumble_block_1"
+    },
+    "stage=2": {
+      "model": "jsn_athletic:block/crumble_block_2"
+    },
+    "stage=3": {
+      "model": "jsn_athletic:block/crumble_block_gone"
+    }
+  }
+}

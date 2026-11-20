@@ -1,0 +1,11 @@
+{
+  "block.jsn_athletic.mover": "仕掛けの台（回る足場・動く床）",
+  "block.jsn_athletic.spin_bar": "回るバー",
+  "block.jsn_athletic.crumble_block": "落ちる床",
+  "block.jsn_athletic.start_line": "スタート",
+  "block.jsn_athletic.checkpoint": "チェックポイント",
+  "block.jsn_athletic.goal_line": "ゴール",
+  "entity.jsn_athletic.platform": "足場",
+  "key.categories.jsn_athletic": "jsn-Athletic",
+  "key.jsn_athletic.retry": "チェックポイントにもどる（長押しでやめる）"
+}

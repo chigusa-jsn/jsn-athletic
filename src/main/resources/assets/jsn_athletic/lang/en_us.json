@@ -1,0 +1,11 @@
+{
+  "block.jsn_athletic.mover": "Mover Base",
+  "block.jsn_athletic.spin_bar": "Spinning Bar",
+  "block.jsn_athletic.crumble_block": "Crumbling Floor",
+  "block.jsn_athletic.start_line": "Start Line",
+  "block.jsn_athletic.checkpoint": "Checkpoint",
+  "block.jsn_athletic.goal_line": "Goal Line",
+  "entity.jsn_athletic.platform": "Platform",
+  "key.categories.jsn_athletic": "jsn-Athletic",
+  "key.jsn_athletic.retry": "Back to checkpoint (hold to quit)"
+}

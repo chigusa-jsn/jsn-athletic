@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "jsn_athletic:block/crumble_1"
+  }
+}

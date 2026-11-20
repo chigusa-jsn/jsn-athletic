@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "jsn_athletic:block/goal_line"
+    }
+  }
+}

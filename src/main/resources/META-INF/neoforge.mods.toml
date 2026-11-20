@@ -1,0 +1,26 @@
+modLoader = "javafml"
+loaderVersion = "[4,)"
+license = "All Rights Reserved"
+
+[[mods]]
+modId = "jsn_athletic"
+version = "0.1.0"
+displayName = "jsn-Athletic"
+authors = "chigusa-jsn"
+description = '''
+アスレチックの仕掛け：回る足場・動く床・回るバー・落ちる床、スタート／チェックポイント／ゴールとタイム計測。
+'''
+
+[[dependencies.jsn_athletic]]
+modId = "neoforge"
+type = "required"
+versionRange = "[21.1.0,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.jsn_athletic]]
+modId = "minecraft"
+type = "required"
+versionRange = "[1.21.1,1.22)"
+ordering = "NONE"
+side = "BOTH"

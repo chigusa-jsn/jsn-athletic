@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "LLL",
+    "SSS"
+  ],
+  "key": {
+    "L": {
+      "item": "minecraft:lime_dye"
+    },
+    "S": {
+      "item": "minecraft:smooth_stone_slab"
+    }
+  },
+  "result": {
+    "id": "jsn_athletic:start_line",
+    "count": 3
+  }
+}

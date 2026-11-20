@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "IGI",
+    "RPR",
+    "III"
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "G": {
+      "item": "minecraft:gold_ingot"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    },
+    "P": {
+      "item": "minecraft:piston"
+    }
+  },
+  "result": {
+    "id": "jsn_athletic:mover",
+    "count": 1
+  }
+}

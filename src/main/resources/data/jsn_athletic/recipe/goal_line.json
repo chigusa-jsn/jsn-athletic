@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "WBW",
+    "SSS"
+  ],
+  "key": {
+    "W": {
+      "item": "minecraft:white_dye"
+    },
+    "B": {
+      "item": "minecraft:black_dye"
+    },
+    "S": {
+      "item": "minecraft:smooth_stone_slab"
+    }
+  },
+  "result": {
+    "id": "jsn_athletic:goal_line",
+    "count": 3
+  }
+}

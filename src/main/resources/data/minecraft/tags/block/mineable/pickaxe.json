@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "jsn_athletic:mover",
+    "jsn_athletic:spin_bar",
+    "jsn_athletic:start_line",
+    "jsn_athletic:checkpoint",
+    "jsn_athletic:goal_line"
+  ]
+}
